@@ -1,7 +1,9 @@
 <template>
 	<div class="keyboard-container">
-		<div class="keys-container">
-			<div class="key-cap" v-for="key in this.keys" :data-key="key">{{ key }}</div>
+		<div class="keys-letter-container">
+			<div v-for="key in this.keys" class="key-cap" :class="{ space:key === ' ' }" :data-key="key">
+				{{ key }}
+			</div>
 		</div>
 	</div>
 </template>
@@ -13,10 +15,20 @@ export default {
 	methods: {
 		registerKeyEventListener() {
 			document.addEventListener("keyup", (event) => {
+				if (event.key === 'Shift') {
+					this.keys = this.keys.map(key => {
+						return key.toLowerCase();
+					});
+				}
 				$(`.key-cap[data-key="${event.key}"]`).removeClass("pressed");
 			});
 
 			document.addEventListener("keydown", (event) => {
+				if (event.key === 'Shift') {
+					this.keys = this.keys.map(key => {
+						return key.toUpperCase();
+					});
+				}
 				this.$emit("key-pressed", event.key);
 				$(`.key-cap[data-key="${event.key}"]`).addClass("pressed");
 			});
@@ -29,14 +41,14 @@ export default {
 		return {
 			keys: ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
 				   "a", "s", "d", "f", "g", "h", "j", "k", "l",
-				   "z", "x", "c", "v", "b", "n", "m", ",", "."]
+				   "z", "x", "c", "v", "b", "n", "m", ",", ".", " "]
 		};
 	},
 };
 </script>
 
 <style scoped>
-.keys-container {
+.keys-letter-container {
 	display: flex;
 	flex-wrap: wrap;
 	max-width: 600px;
@@ -56,6 +68,10 @@ export default {
 	align-items: center;
 	user-select: none;
 	transition: all 0.15s;
+}
+
+.key-cap.space {
+	width: 330px;
 }
 
 .key-cap.pressed {
