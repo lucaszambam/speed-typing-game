@@ -1,7 +1,7 @@
 <template>
 	<div class="keyboard-container">
 		<div class="keys-container">
-			<div class="key-cap" v-for="key in this.keys" :data-key="key">{{key}}</div>
+			<div class="key-cap" v-for="key in this.keys" :data-key="key">{{ key }}</div>
 		</div>
 	</div>
 </template>
@@ -60,5 +60,6 @@ export default {
 
 .key-cap.pressed {
 	background-color: rgba(var(--main-color-rgb) / 0.4);
+	scale: 1.2;
 }
 </style>
