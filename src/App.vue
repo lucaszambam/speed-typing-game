@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<div class="central-area">
-			<TextContainer />
+			<TextContainer :typed-letter="this.keyPressed"/>
 			<Keyboard @key-pressed="keyPress" />
 		</div>
 	</div>
@@ -13,13 +13,18 @@ import Keyboard from "./components/Keyboard.vue";
 
 export default {
 	name: "App",
+	data() {
+		return {
+			keyPressed: ''
+		}
+	},
 	components: {
 		Keyboard,
 		TextContainer
 	},
 	methods: {
 		keyPress(key) {
-			console.log(key);
+			this.keyPressed = key;
 		}
 	}
 };
