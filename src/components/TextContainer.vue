@@ -16,14 +16,15 @@ export default {
     props: ["typed-letter"],
     watch: { 
         typedLetter: function (letterInput) {
-            this.updateText(letterInput); // FIX: The watcher is not triggered 
-                                          // when the new prop value is  the same as the old one.
+            this.updateText(letterInput.value); 
         }
     },
     data() {
         return {
             words: [],
-            availableWords: []
+            availableWords: [],
+            misses: 0,
+            wordsTyped: 0,
         }
     },
 	methods: {
@@ -46,7 +47,7 @@ export default {
                         letters: lettersObject
                     };
                 });
-                this.availableWords = JSON.parse(JSON.stringify(this.words)); // FIX: Use spread operator instead.
+                this.availableWords = JSON.parse(JSON.stringify(this.words));
             } catch(err) {
                 console.error('[could not read texts.json...]');
                 console.error(err);
@@ -60,12 +61,14 @@ export default {
                 this.words[currentWord.id].letters[currentLetter.id].pass = true;
             } else {
                 this.words[currentWord.id].letters[currentLetter.id].miss = true;
+                this.misses++;
             }
 
             this.words[currentWord.id].letters[currentLetter.id].current = false;
             this.availableWords[0].letters.shift(0);
 
             if (currentWord.letters.length === 0) {
+                this.wordsTyped++;
                 this.words[currentWord.id + 1].letters[0].current = true;
                 this.availableWords.shift(0);
             } else {
