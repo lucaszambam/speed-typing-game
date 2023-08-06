@@ -1,7 +1,7 @@
 <template>
 	<div class="text-container">
         <span v-for="word in this.words" class="word">
-		    <span v-for="letter in word.letters" class="letter" :class="{ current: letter.current }">
+		    <span v-for="letter in word.letters" class="letter" :class="{ current: letter.current, miss: letter.miss, pass: letter.pass }">
                 {{ letter.value }}
             </span>
         </span>
@@ -15,20 +15,15 @@ export default {
 	name: "TextContainer",
     props: ["typed-letter"],
     watch: { 
-        typedLetter: (newVal, oldVal) => {
-            console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+        typedLetter: function (letterInput) {
+            this.updateText(letterInput); // FIX: The watcher is not triggered 
+                                          // when the new prop value is  the same as the old one.
         }
     },
     data() {
         return {
-            current: '',
             words: [],
-            letters: [],
-            letter: {
-                current: false,
-                typed: false,
-                value: ''
-            }
+            availableWords: []
         }
     },
 	methods: {
@@ -39,20 +34,52 @@ export default {
 
                 this.words = words.map((word, indexWord) => {
                     const lettersObject = word.split('').map((letter, indexLetter) => ({
+                        id: indexLetter,
                         current: (indexWord === 0 && indexLetter === 0),
-                        typed: false,
+                        miss: null,
+                        pass: null,
                         value: letter
                     }));
-                    return {letters: lettersObject};
+
+                    return {
+                        id: indexWord,
+                        letters: lettersObject
+                    };
                 });
+                this.availableWords = JSON.parse(JSON.stringify(this.words)); // FIX: Use spread operator instead.
             } catch(err) {
                 console.error('[could not read texts.json...]');
                 console.error(err);
+            }
+        },
+        updateText(letterInput) {
+            const currentWord = {...this.availableWords[0]};
+            const currentLetter = {...currentWord.letters[0]};
+
+            if (currentLetter.value === letterInput) {
+                this.words[currentWord.id].letters[currentLetter.id].pass = true;
+            } else {
+                this.words[currentWord.id].letters[currentLetter.id].miss = true;
+            }
+
+            this.words[currentWord.id].letters[currentLetter.id].current = false;
+            this.availableWords[0].letters.shift(0);
+
+            if (currentWord.letters.length === 0) {
+                this.words[currentWord.id + 1].letters[0].current = true;
+                this.availableWords.shift(0);
+            } else {
+                this.words[currentWord.id].letters[currentLetter.id + 1].current =  true;
             }
         }
 	},
     beforeMount() {
         this.initText();
+    },
+    mounted() {
+        setInterval(() => {
+            $('.letter.current').toggleClass('pipe');
+        }, 500)
     }
 };
 </script>
@@ -68,11 +95,23 @@ export default {
 }
 .word {
     display: flex;
+    gap: 0.2rem;
 }
 .letter {
     width: 16px;
 }
 .letter.current {
-    color: var(--main-color);
+    position: relative;
+}
+.letter.current.pipe::before {
+    content: '|';
+    position: absolute;
+    left: -10px;
+}
+.letter.miss {
+    color: red;
+}
+.letter.pass {
+    color: green;
 }
 </style>
