@@ -15,7 +15,8 @@ export default {
 	name: "App",
 	data() {
 		return {
-			keyPressed: ''
+			keyPressed: '',
+			keyIndex: 0,
 		}
 	},
 	components: {
@@ -24,7 +25,10 @@ export default {
 	},
 	methods: {
 		keyPress(key) {
-			this.keyPressed = key;
+			this.keyPressed = {
+				id: this.keyIndex + 1,
+				value: key
+			};
 		}
 	}
 };
