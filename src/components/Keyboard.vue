@@ -29,7 +29,9 @@ export default {
 						return key.toUpperCase();
 					});
 				}
-				this.$emit("key-pressed", event.key);
+				if (this.keys.includes(event.key)) {
+					this.$emit("key-pressed", event.key);
+				}
 				$(`.key-cap[data-key="${event.key}"]`).addClass("pressed");
 			});
 		},
