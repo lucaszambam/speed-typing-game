@@ -102,9 +102,11 @@ export default {
 }
 .letter {
     width: 16px;
+    color: #a9a9a9;
 }
 .letter.current {
     position: relative;
+    color: white;
 }
 .letter.current.pipe::before {
     content: '|';
