@@ -4,6 +4,12 @@
 			<TextContainer :typed-letter="this.keyPressed"/>
 			<Keyboard @key-pressed="keyPress" />
 		</div>
+
+		<div class="github-repo">
+			<a href="https://github.com/lucaszambam/speed-typing-game" target="_blank">
+				<img src = "./assets/svg/github-mark-white.svg" alt="GitHub Repository"/>
+			</a>
+		</div>
 	</div>
 </template>
 
@@ -52,5 +58,19 @@ export default {
     justify-content: center;
     align-items: center;
 	gap: 4rem;
+}
+.github-repo {
+	position: fixed;
+    bottom: 10px;
+    right: 20px;
+}
+.github-repo a img {
+	scale: 0.45;
+    opacity: 0.5;
+	transition: all .25s;
+}
+.github-repo a img:hover {
+	opacity: 1;
+	scale: 0.5;
 }
 </style>
