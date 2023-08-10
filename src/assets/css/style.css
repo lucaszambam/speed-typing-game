@@ -1,8 +1,11 @@
 :root {
-    --main-color: #b27665;
+    --main-color: #ffb938;
+    --main-color-dark: #1f1d18;
+    --color-pass: #317031;
+    --color-miss: #822a2a;
     --main-color-rgb: 178 118 102;
     --border-color: #56595d;
-    --background-color: #333538;
+    --background-color: #232425;
 }
 
 body {
