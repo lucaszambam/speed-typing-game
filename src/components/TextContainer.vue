@@ -1,6 +1,6 @@
 <template>
 	<div class="text-container">
-        <span v-for="word in this.words" class="word">
+        <span v-for="word in this.words" class="word" :class="{ current: word.current }">
 		    <span v-for="letter in word.letters" class="letter" :class="{ current: letter.current, miss: letter.miss, pass: letter.pass }">
                 {{ letter.value }}
             </span>
@@ -44,6 +44,7 @@ export default {
 
                     return {
                         id: indexWord,
+                        current: (indexWord === 0),
                         letters: lettersObject
                     };
                 });
@@ -70,6 +71,8 @@ export default {
             if (currentWord.letters.length === 0) {
                 this.wordsTyped++;
                 this.words[currentWord.id + 1].letters[0].current = true;
+                this.words[currentWord.id].current = false;
+                this.words[currentWord.id + 1].current = true;
                 this.availableWords.shift(0);
             } else {
                 this.words[currentWord.id].letters[currentLetter.id + 1].current =  true;
@@ -94,29 +97,31 @@ export default {
     max-height: 130px;
     overflow: hidden;
     font-size: 30px;
-    font-weight: 500;
+    font-weight: 600;
 }
 .word {
     display: flex;
-    gap: 0.2rem;
+    gap: 0.15rem;
+}
+.word.current > .letter:not(.miss, .pass, .current, .current.pipe) {
+    color: var(--main-color);
 }
 .letter {
-    width: 16px;
+    min-width: 16px;
+    width: -webkit-fill-available;
     color: #a9a9a9;
 }
 .letter.current {
-    position: relative;
     color: white;
 }
-.letter.current.pipe::before {
-    content: '|';
-    position: absolute;
-    left: -10px;
+.letter.current.pipe {
+    background-color: var(--main-color);
+    color: var(--main-color-dark);
 }
 .letter.miss {
-    color: red;
+    color: var(--color-miss);
 }
 .letter.pass {
-    color: green;
+    color: var(--color-pass);
 }
 </style>
