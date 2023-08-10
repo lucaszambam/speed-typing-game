@@ -7,7 +7,7 @@ Welcome to the Speed Typing Game repository! This project, built for studying pu
 
 ## Technologies Used
 
-- **Vue3**: The game is developed using Vue3, a progressive JavaScript framework known for its flexibility and efficiency in building user interfaces.
+- **Vue3**: The game is developed using Vue3, a progressive JavaScript framework known for its flexibility and efficiency in building user interfaces. Currently using the Options API. Will update to the Composition API soon to learn and study the best ways to refactor Vue2 projects.
 
 ## Features
 
