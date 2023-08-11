@@ -1,5 +1,9 @@
 <template>
 	<div id="app">
+		<div class="timer-area">
+			<Countdown :init="true"/>
+		</div>
+
 		<div class="central-area">
 			<TextContainer :typed-letter="this.keyPressed"/>
 			<Keyboard @key-pressed="keyPress" />
@@ -14,6 +18,7 @@
 </template>
 
 <script>
+import Countdown from "./components/Countdown.vue"; 
 import TextContainer from "./components/TextContainer.vue"; 
 import Keyboard from "./components/Keyboard.vue";
 
@@ -26,6 +31,7 @@ export default {
 		}
 	},
 	components: {
+		Countdown,
 		Keyboard,
 		TextContainer
 	},
@@ -49,7 +55,9 @@ export default {
 	justify-content: center;
 	align-items: center;
 	height: 98vh;
-	width: 99vw;
+	width: 99vw;   
+	display: flex;
+    flex-direction: column;
 }
 .central-area {
 	max-width: 50%;
