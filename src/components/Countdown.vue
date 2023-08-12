@@ -1,9 +1,14 @@
 <template>
 	<div class="countdown-container">
-		<span id="countdown-number">{{ this.timer.seconds }}</span>
-        <svg>
-            <circle r="32" cx="34" cy="34" :class="{ run: this.timer.run }"></circle>
-        </svg>
+        <div class="base-timer">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <g class="base-timer-circle">
+                <circle class="base-timer-path-elapsed" cx="50" cy="50" r="45"></circle>
+                <path stroke-dasharray="279" class="base-timer-path-remaining" d=" M 50, 50 m -45, 0 a 45,45 0 1,0 90,0 a 45,45 0 1,0 -90,0"></path>
+                </g>
+            </svg>
+            <span id="base-timer-label" class="base-timer-label">{{ this.timer.seconds }}</span>
+        </div>
 	</div>
 </template>
 
@@ -31,7 +36,8 @@ export default {
             timer: {
                 seconds: 60,
                 run: false
-            }
+            },
+            fullDashArray: 279
         }
     },
     watch: {
@@ -44,10 +50,13 @@ export default {
             this.timer.seconds = this.seconds;
             this.timer.run = true;
             this.timeout = setInterval(() => {
+                
                 if (this.timer.seconds === 0) {
                     this.stopCountdown();
                     this.$emit("countdown-over", true);
                 }
+                
+                this.setCircleDasharray();
                 this.timer.seconds--;
             }, 1000);
         },
@@ -56,6 +65,11 @@ export default {
             this.timer.run = false;
             this.timer.seconds = this.seconds;
             clearInterval(this.tiemout);
+        },
+
+        setCircleDasharray() {
+            const circleDasharray = `${(this.fullDashArray * this.timer.seconds / this.seconds).toFixed(0)} ${this.fullDashArray}`;
+            $(".base-timer-path-remaining").attr("stroke-dasharray", circleDasharray);
         }
     },
     mounted() {
@@ -65,43 +79,40 @@ export default {
 </script>
 
 <style scoped>
-#countdown-container {
-    position: relative;
-    margin: auto;
-    margin-top: 100px;
-    height: 40px;
-    width: 40px;
-    text-align: center;
+.base-timer {
+  position: relative;
+  width: 140px;
+  height: 140px;
 }
-#countdown-number {
-    color: var(--main-color);
-    font-weight: bolder;
-    font-size: 35px;
-}
-svg {
-    position: absolute;
-    width: 69px;
-    height: 69px;
-    transform: rotateY(-180deg) rotateZ(-90deg);
-}
-svg circle {
-    stroke: var(--main-color);
-    stroke-dasharray: 198px;
-    stroke-dashoffset: 0px;
-    stroke-linecap: round;
-    stroke-width: 5px;
-    fill: none;
-}
-svg circle.run {
-    animation: countdown v-bind(seconds/1.7 + 's') linear forwards;
+.base-timer-circle {
+  fill: none;
+  stroke: none;
 }
 
-@keyframes countdown {
-    from {
-        stroke-dashoffset: 0px;
-    }
-    to {
-        stroke-dashoffset: 113px;
-    }
+.base-timer-path-elapsed {
+  stroke-width: 7px;
+  stroke: grey;
+}
+
+.base-timer-path-remaining {
+  stroke-width: 7px;
+  stroke-linecap: round;
+  transform: rotate(90deg);
+  transform-origin: center;
+  transition: 1s linear all;
+  fill-rule: nonzero;
+  stroke: currentColor;
+  color: var(--main-color);
+}
+.base-timer-label {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 45px;
+  font-family: monospace;
 }
 </style>
