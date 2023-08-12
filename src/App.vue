@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<div class="timer-area">
+		<div class="top-area">
 			<Countdown :init="true"/>
 		</div>
 
@@ -48,7 +48,7 @@ export default {
 
 <style>
 #app {
-	font-family: "Cutive Mono", Avenir, Helvetica, Arial, sans-serif;
+	font-family: "Cutive Mono", Helvetica, Arial, sans-serif;
 	color: white;
 	font-size: 25px;
 	display: flex;
@@ -58,6 +58,7 @@ export default {
 	width: 99vw;   
 	display: flex;
     flex-direction: column;
+	gap: 4rem;
 }
 .central-area {
 	max-width: 50%;
