@@ -17,7 +17,8 @@ export default {
 	name: "Countdown",
     props: {
         init: {
-            type: Boolean
+            type: Boolean,
+            default: false
         },
         seconds: {
             type: Number,
@@ -25,55 +26,52 @@ export default {
         }
     },
     watch: { 
-        init: function () {
-            this.initCountdown(); 
+        init: function (doInit) {
+            if (doInit) {
+                this.initCountdown();
+            }
         }
     },
 	emits: ["countdown-over"],
     data() {
         return {
-            timeout: 0,
             timer: {
                 seconds: 60,
-                run: false
             },
             fullDashArray: 279
-        }
-    },
-    watch: {
-        timer: function (obj) {
-            debugger;
         }
     },
     methods: {
         initCountdown() {
             this.timer.seconds = this.seconds;
-            this.timer.run = true;
             this.timeout = setInterval(() => {
                 
                 if (this.timer.seconds === 0) {
                     this.stopCountdown();
                     this.$emit("countdown-over", true);
+                } else {
+                    this.timer.seconds--;
+                    this.setCircleDasharray();
                 }
                 
-                this.setCircleDasharray();
-                this.timer.seconds--;
             }, 1000);
         },
 
         stopCountdown() {
-            this.timer.run = false;
+            clearInterval(this.timeout);
+            $(".base-timer-path-remaining").attr("stroke-dasharray", "0 999");
+        },
+
+        restartCountdown() {
             this.timer.seconds = this.seconds;
-            clearInterval(this.tiemout);
+            $(".base-timer-path-remaining").attr("stroke-dasharray", this.fullDashArray);
+            this.initCountdown();
         },
 
         setCircleDasharray() {
             const circleDasharray = `${(this.fullDashArray * this.timer.seconds / this.seconds).toFixed(0)} ${this.fullDashArray}`;
             $(".base-timer-path-remaining").attr("stroke-dasharray", circleDasharray);
         }
-    },
-    mounted() {
-        this.initCountdown();
     }
 };
 </script>
@@ -102,7 +100,7 @@ export default {
   transition: 1s linear all;
   fill-rule: nonzero;
   stroke: currentColor;
-  color: var(--main-color);
+  color: var(--color-pass);
 }
 .base-timer-label {
   position: absolute;
