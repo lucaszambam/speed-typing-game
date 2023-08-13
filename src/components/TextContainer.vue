@@ -1,6 +1,6 @@
 <template>
 	<div class="text-container">
-        <span v-for="word in this.words" class="word" :class="{ current: word.current }">
+        <span v-for="word in this.words" class="word" :data-word="word.id" :class="{ current: word.current }">
 		    <span v-for="letter in word.letters" class="letter" :class="{ current: letter.current, miss: letter.miss, pass: letter.pass }">
                 {{ letter.value }}
             </span>
@@ -73,9 +73,20 @@ export default {
                 this.words[currentWord.id + 1].letters[0].current = true;
                 this.words[currentWord.id].current = false;
                 this.words[currentWord.id + 1].current = true;
+                
+                this.checkAutoScroll(currentWord.id + 1);
                 this.availableWords.shift(0);
             } else {
                 this.words[currentWord.id].letters[currentLetter.id + 1].current =  true;
+            }
+        },
+        checkAutoScroll(wordId) {
+            const textContainerObject = document.querySelector(`.text-container`);
+            const wordContainerObject = document.querySelector(`.word[data-word="${wordId}"]`);
+            if (textContainerObject && wordContainerObject) {
+                if ((textContainerObject.getBoundingClientRect().bottom - wordContainerObject.getBoundingClientRect().bottom) < wordContainerObject.clientHeight) {
+                    $(textContainerObject).animate({scrollTop: $(textContainerObject).scrollTop() + (wordContainerObject.clientHeight * 2)}, 700);
+                }
             }
         }
 	},
@@ -112,7 +123,7 @@ export default {
     color: #a9a9a9;
 }
 .letter.current {
-    color: white;
+    color: var(--main-color);
 }
 .letter.current.pipe {
     background-color: var(--main-color);
