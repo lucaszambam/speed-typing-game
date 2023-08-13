@@ -1,12 +1,16 @@
 <template>
 	<div id="app">
 		<div class="top-area">
-			<Countdown :init="true"/>
+			<Countdown :init="this.keyIndex > 0"/>
 		</div>
 
 		<div class="central-area">
 			<TextContainer :typed-letter="this.keyPressed"/>
 			<Keyboard @key-pressed="keyPress" />
+		</div>
+
+		<div class="bottom-area">
+			<GameStatus :started="this.keyIndex > 0" @restart="restartGame"/>
 		</div>
 
 		<div class="github-repo">
@@ -21,6 +25,7 @@
 import Countdown from "./components/Countdown.vue"; 
 import TextContainer from "./components/TextContainer.vue"; 
 import Keyboard from "./components/Keyboard.vue";
+import GameStatus from "./components/GameStatus.vue";
 
 export default {
 	name: "App",
@@ -28,19 +33,25 @@ export default {
 		return {
 			keyPressed: '',
 			keyIndex: 0,
+			startGame: false,
 		}
 	},
 	components: {
-		Countdown,
-		Keyboard,
-		TextContainer
-	},
+    Countdown,
+    Keyboard,
+    TextContainer,
+    GameStatus
+},
 	methods: {
 		keyPress(key) {
 			this.keyPressed = {
-				id: this.keyIndex + 1,
+				id: this.keyIndex++,
 				value: key
 			};
+		},
+
+		restartGame() {
+			this.startGame = true;
 		}
 	}
 };
@@ -67,6 +78,9 @@ export default {
     justify-content: center;
     align-items: center;
 	gap: 4rem;
+}
+.bottom-area {
+	margin-top: 100px;
 }
 .github-repo {
 	position: fixed;
